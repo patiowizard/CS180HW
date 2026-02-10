@@ -5,7 +5,7 @@ public class FunTimesTesting
         static void main() {
             Scanner sc = new Scanner(System.in);
 
-            System.out.println("worbles?");
+            System.out.println("worbles? yes or no?");
             String worbles = sc.nextLine();
 
             if (worbles.toLowerCase().contains("yes")) {
