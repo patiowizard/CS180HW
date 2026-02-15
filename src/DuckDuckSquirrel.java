@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 //Javadoc Here
 public class DuckDuckSquirrel {
 
@@ -11,9 +13,41 @@ public class DuckDuckSquirrel {
     private final static String LAZY_USER = "Typing issue? Come on, this won't fix itself.";
 
     //todo change this string to be correct
-    private final static String VALID_OUTPUT_DIALOG = "Cycles: 0 Ducks: 0 Squirrels: 0 DSR: 0.000 SCR: 0.000";
+    private final static String VALID_OUTPUT_DIALOG = "Cycles: %f Ducks: %f Squirrels: %f DSR: %f.3 SCR: %f.3";
 
     //todo implement your program here
+
+    static void main() {
+        float ddsCount;
+        float pureDuckCount;
+        float squCount;
+        float dsr;
+        float scr;
+        String input;
+        Scanner scan = new Scanner(System.in);
+
+        System.out.println(WELCOME_MESSAGE);
+
+        do {
+            System.out.println(ENTRY_PROMPT);
+            input = scan.nextLine();
+
+            for(int i = 0; i >= input.length(); i++); {
+                System.out.println(input.charAt(i + 2));
+            }
+
+
+
+        } while (!input.equals("exit"));
+
+        System.out.println(SHUT_DOWN);
+
+
+
+
+
+
+    }
 
 
 }
