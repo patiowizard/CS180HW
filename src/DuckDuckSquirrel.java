@@ -1,6 +1,18 @@
 import java.util.Scanner;
 
-//Javadoc Here
+/**
+ * DuckDuckSquirrel Program - HW05 Challenge
+ *
+ * This program takes input from the user on a loop, and each time parses through
+ * the data and calculates various counts asked by the assignment such as how many
+ * times the word "duck" or "squirrel" appear. The user is then presented with a
+ * formatted, printed statement returning this information to them
+ *
+ * @author Andres Maldonado, Lab Section L18
+ *
+ * @version February 16, 2026
+ *
+ */
 public class DuckDuckSquirrel {
 
     private final static String WELCOME_MESSAGE = "Another semester another issue... " +
@@ -16,8 +28,7 @@ public class DuckDuckSquirrel {
     private final static String VALID_OUTPUT_DIALOG = "Cycles: %.0f Ducks: %.0f Squirrels: %.0f DSR: %.3f SCR: %.3f\n";
 
     //todo implement your program here
-
-    static void main() {
+    public static void main(String[] args) {
 
         String sgf = "segfault";
         int sgfSuccess = 0;
@@ -33,8 +44,9 @@ public class DuckDuckSquirrel {
 
         String dk = "duck";
         float dkCount = 0;
-        int dkSuccess = 0;
-        String dkCheckerString = "";
+        int pos = 0;
+
+
 
         float dsr = 0;
         float scr = 0;
@@ -53,14 +65,14 @@ public class DuckDuckSquirrel {
         // main loop, leaves if exitFlag is triggered
         do {
             // initialize variables, so blank slate every time
+            sgfFail = false;
             sgfSuccess = 0;
 
             ddsCount = 0;
             ddsSuccess = 0;
 
             dkCount = 0;
-            dkSuccess = 0;
-            dkCheckerString = "";
+            pos = 0;
 
             squCount = 0;
             squSuccess = 0;
@@ -79,7 +91,7 @@ public class DuckDuckSquirrel {
                     if (input.charAt(i) == sgf.charAt(sgfSuccess)) {
                         sgfSuccess++;
                     }
-                    if (sgfSuccess == sgf.length() - 1) {
+                    if (sgfSuccess == sgf.length()) {
                         System.out.println(SEG_FAULT);
                         sgfFail = true;
                         break;
@@ -94,7 +106,7 @@ public class DuckDuckSquirrel {
                     if (input.charAt(i) == dds.charAt(ddsSuccess)) {
                         ddsSuccess++;
                     }
-                    if (ddsSuccess == dds.length() - 1) {
+                    if (ddsSuccess == dds.length()) {
                         ddsCount++;
                         ddsSuccess = 0;
                     }
@@ -102,16 +114,9 @@ public class DuckDuckSquirrel {
 
                 //checks for # of contiguous, or pure, ducks
                 if (input.contains(dk)) {
-                    dkCheckerString = input;
-                    while (dkCheckerString.contains(dk)) {
-                        int startDk = dkCheckerString.indexOf("d");
-                        int endDk = dkCheckerString.indexOf("k") + 1;
-
-                        if (dkCheckerString.substring(startDk, endDk).equals(dk)) {
-                            dkCount++;
-                        }
-
-                        dkCheckerString = dkCheckerString.substring(endDk, dkCheckerString.length());
+                    while ((pos = input.indexOf(dk, pos)) != -1) {
+                        dkCount++;
+                        pos += 4;
                     }
                 }
 
@@ -120,7 +125,7 @@ public class DuckDuckSquirrel {
                     if (input.charAt(i) == squ.charAt(squSuccess)) {
                         squSuccess++;
                     }
-                    if (squSuccess == squ.length() - 1) {
+                    if (squSuccess == squ.length()) {
                         squCount++;
                         squSuccess = 0;
                     }
@@ -130,7 +135,7 @@ public class DuckDuckSquirrel {
                     dsr = dkCount / squCount;
                     scr = squCount / ddsCount;
                     System.out.printf(VALID_OUTPUT_DIALOG, ddsCount, dkCount, squCount, dsr, scr);
-                } else if (ddsCount + dkCount + squCount != 0){
+                } else if (ddsCount + dkCount + squCount != 0) {
                     System.out.println(SEG_FAULT);
                 } else {
                     System.out.println(LAZY_USER);
