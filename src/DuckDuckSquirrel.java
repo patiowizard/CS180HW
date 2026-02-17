@@ -13,7 +13,7 @@ public class DuckDuckSquirrel {
     private final static String LAZY_USER = "Typing issue? Come on, this won't fix itself.";
 
     //todo change this string to be correct
-    private final static String VALID_OUTPUT_DIALOG = "Cycles: %f Ducks: %f Squirrels: %f DSR: %f.3 SCR: %f.3";
+    private final static String VALID_OUTPUT_DIALOG = "Cycles: %.0f Ducks: %.0f Squirrels: %.0f DSR: %.3f SCR: %.3f\n";
 
     //todo implement your program here
 
@@ -24,16 +24,17 @@ public class DuckDuckSquirrel {
         boolean sgfFail = false;
 
         String dds = "duckducksquirrel";
-        int ddsCount = 0;
+        float ddsCount = 0;
         int ddsSuccess = 0;
 
         String squ = "squirrel";
-        int squCount = 0;
+        float squCount = 0;
         int squSuccess = 0;
 
         String dk = "duck";
-        int dkCount = 0;
+        float dkCount = 0;
         int dkSuccess = 0;
+        String dkCheckerString = "";
 
         float dsr = 0;
         float scr = 0;
@@ -59,6 +60,7 @@ public class DuckDuckSquirrel {
 
             dkCount = 0;
             dkSuccess = 0;
+            dkCheckerString = "";
 
             squCount = 0;
             squSuccess = 0;
@@ -79,8 +81,12 @@ public class DuckDuckSquirrel {
                     }
                     if (sgfSuccess == sgf.length() - 1) {
                         System.out.println(SEG_FAULT);
+                        sgfFail = true;
                         break;
                     }
+                }
+                if (sgfFail) {
+                    continue;
                 }
 
                 //checks for # of dds cycles
@@ -95,13 +101,17 @@ public class DuckDuckSquirrel {
                 }
 
                 //checks for # of contiguous, or pure, ducks
-                for (int i = 0; i < input.length(); i++) {
-                    for (int j = 0; input.charAt(j) == dk.charAt(dkSuccess); j++) {
-                        dkSuccess++;
-                        if (dkSuccess == dk.length() - 1) {
+                if (input.contains(dk)) {
+                    dkCheckerString = input;
+                    while (dkCheckerString.contains(dk)) {
+                        int startDk = dkCheckerString.indexOf("d");
+                        int endDk = dkCheckerString.indexOf("k") + 1;
+
+                        if (dkCheckerString.substring(startDk, endDk).equals(dk)) {
                             dkCount++;
-                            dkSuccess = 0;
                         }
+
+                        dkCheckerString = dkCheckerString.substring(endDk, dkCheckerString.length());
                     }
                 }
 
@@ -116,11 +126,16 @@ public class DuckDuckSquirrel {
                     }
                 }
 
+                if (squCount != 0 && ddsCount != 0) {
+                    dsr = dkCount / squCount;
+                    scr = squCount / ddsCount;
+                    System.out.printf(VALID_OUTPUT_DIALOG, ddsCount, dkCount, squCount, dsr, scr);
+                } else if (ddsCount + dkCount + squCount != 0){
+                    System.out.println(SEG_FAULT);
+                } else {
+                    System.out.println(LAZY_USER);
+                }
 
-
-                System.out.println("ddsCount: " + ddsCount);
-                System.out.println("dkCount: " + dkCount);
-                System.out.println("squCount: " + squCount);
 
             } else {
                 exitFlag = true;
