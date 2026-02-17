@@ -18,27 +18,115 @@ public class DuckDuckSquirrel {
     //todo implement your program here
 
     static void main() {
-        float ddsCount;
-        float pureDuckCount;
-        float squCount;
-        float dsr;
-        float scr;
+
+        String sgf = "segfault";
+        int sgfSuccess = 0;
+        boolean sgfFail = false;
+
+        String dds = "duckducksquirrel";
+        int ddsCount = 0;
+        int ddsSuccess = 0;
+
+        String squ = "squirrel";
+        int squCount = 0;
+        int squSuccess = 0;
+
+        String dk = "duck";
+        int dkCount = 0;
+        int dkSuccess = 0;
+
+        float dsr = 0;
+        float scr = 0;
+
+        boolean exitFlag = false;
         String input;
+
+
+
+
         Scanner scan = new Scanner(System.in);
 
         System.out.println(WELCOME_MESSAGE);
 
+
+        // main loop, leaves if exitFlag is triggered
         do {
+            // initialize variables, so blank slate every time
+            sgfSuccess = 0;
+
+            ddsCount = 0;
+            ddsSuccess = 0;
+
+            dkCount = 0;
+            dkSuccess = 0;
+
+            squCount = 0;
+            squSuccess = 0;
+
+
+            dsr = 0;
+            scr = 0;
+
             System.out.println(ENTRY_PROMPT);
             input = scan.nextLine();
 
-            for(int i = 0; i >= input.length(); i++); {
-                System.out.println(input.charAt(i + 2));
+            if (!input.equals("exit")) {
+
+                //checks for segfault
+                for (int i = 0; i < input.length(); i++) {
+                    if (input.charAt(i) == sgf.charAt(sgfSuccess)) {
+                        sgfSuccess++;
+                    }
+                    if (sgfSuccess == sgf.length() - 1) {
+                        System.out.println(SEG_FAULT);
+                        break;
+                    }
+                }
+
+                //checks for # of dds cycles
+                for (int i = 0; i < input.length(); i++) {
+                    if (input.charAt(i) == dds.charAt(ddsSuccess)) {
+                        ddsSuccess++;
+                    }
+                    if (ddsSuccess == dds.length() - 1) {
+                        ddsCount++;
+                        ddsSuccess = 0;
+                    }
+                }
+
+                //checks for # of contiguous, or pure, ducks
+                for (int i = 0; i < input.length(); i++) {
+                    for (int j = 0; input.charAt(j) == dk.charAt(dkSuccess); j++) {
+                        dkSuccess++;
+                        if (dkSuccess == dk.length() - 1) {
+                            dkCount++;
+                            dkSuccess = 0;
+                        }
+                    }
+                }
+
+                //checks for # of squirrels
+                for (int i = 0; i < input.length(); i++) {
+                    if (input.charAt(i) == squ.charAt(squSuccess)) {
+                        squSuccess++;
+                    }
+                    if (squSuccess == squ.length() - 1) {
+                        squCount++;
+                        squSuccess = 0;
+                    }
+                }
+
+
+
+                System.out.println("ddsCount: " + ddsCount);
+                System.out.println("dkCount: " + dkCount);
+                System.out.println("squCount: " + squCount);
+
+            } else {
+                exitFlag = true;
             }
 
-
-
-        } while (!input.equals("exit"));
+        } while (!exitFlag);
 
         System.out.println(SHUT_DOWN);
 
