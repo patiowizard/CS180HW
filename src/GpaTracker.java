@@ -20,6 +20,18 @@ public class GpaTracker {
     public static void main(String[] args) {
         boolean exitFlag = false;
         boolean falseExit = false;
+        int inputPos = 0;
+
+        //single course variables
+        float currentGPA;
+        float currentCredits;
+        float courseCode;
+        String letterGrade;
+        float newCourseGPA;
+
+        float startGPA;
+        float startCredits;
+
         String initInput;
         String userInput;
 
@@ -27,16 +39,42 @@ public class GpaTracker {
         System.out.println(WELCOME_MESSAGE);
 
         do {
+            //init input scanner position
+            inputPos = 0;
+
+            //init single course variables
+            currentGPA = 0;
+            currentCredits = 0;
+            courseCode = 0;
+            letterGrade = "";
+            newCourseGPA = 0;
+
+            //welcome
             System.out.println(MAIN_MENU);
             initInput = scan.nextLine();
 
-
+            //menu system
             if (initInput.equals("1") || initInput.equals("2") || initInput.equals("3")) {
                 switch (initInput) {
+                    //Single Course
                     case "1":
+                        userInput = scan.nextLine();
+
+                        for (int i = 0; i < 5; i++) {
+                            inputPos = userInput.indexOf("-");
+                            currentGPA = Float.parseFloat(userInput.substring(0, inputPos));
+                            inputPos = userInput.indexOf("-", inputPos);
+
+                            //prints message
+
+
+                        }
                         break;
+                    //Semester Results
                     case "2":
+
                         break;
+                    //Exit
                     case "3":
                         do {
                             System.out.println(CONFIRMATION);
