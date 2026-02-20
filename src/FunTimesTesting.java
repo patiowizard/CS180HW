@@ -13,5 +13,7 @@ public class FunTimesTesting
             } else {
                 System.out.println("nup.");
             }
+
+            String testWord = "3.2000-76-234";
         }
 }

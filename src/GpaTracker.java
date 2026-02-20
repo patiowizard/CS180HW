@@ -20,17 +20,19 @@ public class GpaTracker {
     public static void main(String[] args) {
         boolean exitFlag = false;
         boolean falseExit = false;
-        int inputPos = 0;
+        int indexPos = 0;
 
         //single course variables
-        float currentGPA;
-        float currentCredits;
-        float courseCode;
+        double currentGPA;
+        double currentCreds;
+        String courseCode;
         String letterGrade;
-        float newCourseGPA;
+        double courseCreds;
+        double newCourseGPA;
+        double gradePts;
 
-        float startGPA;
-        float startCredits;
+        double startGPA;
+        double startCreds;
 
         String initInput;
         String userInput;
@@ -40,14 +42,16 @@ public class GpaTracker {
 
         do {
             //init input scanner position
-            inputPos = 0;
+            indexPos = 0;
 
             //init single course variables
             currentGPA = 0;
-            currentCredits = 0;
-            courseCode = 0;
+            currentCreds = 0;
+            courseCode = "";
             letterGrade = "";
+            courseCreds = 0;
             newCourseGPA = 0;
+            gradePts = 0;
 
             //welcome
             System.out.println(MAIN_MENU);
@@ -58,20 +62,95 @@ public class GpaTracker {
                 switch (initInput) {
                     //Single Course
                     case "1":
+                        System.out.println(SINGLE_COURSE_PROMPT);
                         userInput = scan.nextLine();
 
-                        for (int i = 0; i < 5; i++) {
-                            inputPos = userInput.indexOf("-");
-                            currentGPA = Float.parseFloat(userInput.substring(0, inputPos));
-                            inputPos = userInput.indexOf("-", inputPos);
+                        //parse data from userInput
+                        currentGPA = Double.parseDouble(userInput.substring
+                                (indexPos, userInput.indexOf("-", indexPos)));
+                        indexPos = userInput.indexOf("-", indexPos);
 
-                            //prints message
+                        currentCreds = Double.parseDouble(userInput.substring
+                                (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
+                        indexPos = userInput.indexOf("-", indexPos + 1);
+
+                        courseCode = (userInput.substring
+                                (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
+                        indexPos = userInput.indexOf("-", indexPos + 1);
+
+                        letterGrade = (userInput.substring
+                                (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
+                        indexPos = userInput.indexOf("-", indexPos + 1);
+
+                        courseCreds = Double.parseDouble(userInput.substring
+                                (indexPos + 1));
+
+                        //calculations
+                        //calc gradePts
+                        gradePts = switch (letterGrade) {
+                            case "A" -> 4.0;
+                            case "A-" -> 3.7;
+                            case "B+" -> 3.3;
+                            case "B" -> 3.0;
+                            case "B-" -> 2.7;
+                            case "C+" -> 2.3;
+                            case "C" -> 2.0;
+                            case "C-" -> 1.7;
+                            case "D+" -> 1.3;
+                            case "D" -> 1.0;
+                            case "D-" -> 0.7;
+                            case "F" -> 0;
+                            default -> gradePts;
+                        };
+
+                        //calc newCourseGPA
+                        newCourseGPA = ((currentGPA * currentCreds) + //calc current TQP and add...
+                                (gradePts * courseCreds)) / //calc new course TQP
+                                        (currentCreds + courseCreds); //calc TC
+
+                        //prints final message
+                        System.out.printf("%.2f, %.2f, %s, %s, %.2f\n",
+                                currentGPA, currentCreds, courseCode, letterGrade, courseCreds);
+
+                        System.out.printf(SINGLE_COURSE_OUTCOME + " %.2f\n", newCourseGPA);
 
 
-                        }
                         break;
                     //Semester Results
                     case "2":
+                        System.out.println(SEMESTER_PROMPT);
+                        userInput = scan.nextLine();
+
+                        while (userInput.substring(indexPos + 1).contains("-")) {
+                            //init vars used in loop
+
+                            //parse current data from userInput
+                            currentGPA = Double.parseDouble(userInput.substring
+                                    (indexPos, userInput.indexOf("-", indexPos)));
+                            indexPos = userInput.indexOf("-", indexPos);
+
+                            currentCreds = Double.parseDouble(userInput.substring
+                                    (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
+                            indexPos = userInput.indexOf("-", indexPos + 1);
+
+                            //on the fly calc the following course triples, concatting gpaProg with results
+
+                            while (userInput.indexOf("-", indexPos) != -1) { //parse data from each course
+                                courseCode = (userInput.substring
+                                        (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
+                                indexPos = userInput.indexOf("-", indexPos + 1);
+
+                                letterGrade = (userInput.substring
+                                        (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
+                                indexPos = userInput.indexOf("-", indexPos + 1);
+
+                                courseCreds = Double.parseDouble(userInput.substring
+                                        (indexPos + 1));
+                            }
+
+
+
+                        }
 
                         break;
                     //Exit
