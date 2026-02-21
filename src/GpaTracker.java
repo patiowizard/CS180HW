@@ -31,6 +31,8 @@ public class GpaTracker {
         double newCourseGPA;
         double gradePts;
 
+        //semester variables
+        String gpaProg;
         double startGPA;
         double startCreds;
 
@@ -51,6 +53,7 @@ public class GpaTracker {
             letterGrade = "";
             courseCreds = 0;
             newCourseGPA = 0;
+            gpaProg = "";
             gradePts = 0;
 
             //welcome
@@ -82,12 +85,16 @@ public class GpaTracker {
                                 (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
                         indexPos = userInput.indexOf("-", indexPos + 1);
 
+                        if ((userInput.charAt(indexPos + 1)) == '-') {
+                            letterGrade += "-";
+                            indexPos += 1;
+                        }
+
                         courseCreds = Double.parseDouble(userInput.substring
                                 (indexPos + 1));
 
-                        //calculations
                         //calc gradePts
-                        gradePts = switch (letterGrade) {
+                        gradePts = switch (letterGrade) { //calc gradePts
                             case "A" -> 4.0;
                             case "A-" -> 3.7;
                             case "B+" -> 3.3;
@@ -108,50 +115,75 @@ public class GpaTracker {
                                 (gradePts * courseCreds)) / //calc new course TQP
                                         (currentCreds + courseCreds); //calc TC
 
-                        //prints final message
-                        System.out.printf("%.2f, %.2f, %s, %s, %.2f\n",
-                                currentGPA, currentCreds, courseCode, letterGrade, courseCreds);
-
+                        //print final message
                         System.out.printf(SINGLE_COURSE_OUTCOME + " %.2f\n", newCourseGPA);
-
-
                         break;
                     //Semester Results
                     case "2":
                         System.out.println(SEMESTER_PROMPT);
                         userInput = scan.nextLine();
 
-                        while (userInput.substring(indexPos + 1).contains("-")) {
-                            //init vars used in loop
+                        //parse current data from userInput
+                        currentGPA = Double.parseDouble(userInput.substring
+                                (indexPos, userInput.indexOf("-", indexPos)));
+                        indexPos = userInput.indexOf("-", indexPos);
 
-                            //parse current data from userInput
-                            currentGPA = Double.parseDouble(userInput.substring
-                                    (indexPos, userInput.indexOf("-", indexPos)));
-                            indexPos = userInput.indexOf("-", indexPos);
+                        currentCreds = Double.parseDouble(userInput.substring
+                                (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
+                        indexPos = userInput.indexOf("-", indexPos + 1);
 
-                            currentCreds = Double.parseDouble(userInput.substring
+                        //on the fly calc the following course triples, concatting gpaProg with result
+                        while (userInput.indexOf("-", indexPos + 1) != -1) { //parse data from each course
+                            //init vars used in loop (?)
+                            courseCode = (userInput.substring
                                     (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
                             indexPos = userInput.indexOf("-", indexPos + 1);
 
-                            //on the fly calc the following course triples, concatting gpaProg with results
+                            letterGrade = (userInput.substring
+                                    (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
+                            indexPos = userInput.indexOf("-", indexPos + 1);
 
-                            while (userInput.indexOf("-", indexPos) != -1) { //parse data from each course
-                                courseCode = (userInput.substring
-                                        (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
-                                indexPos = userInput.indexOf("-", indexPos + 1);
-
-                                letterGrade = (userInput.substring
-                                        (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
-                                indexPos = userInput.indexOf("-", indexPos + 1);
-
-                                courseCreds = Double.parseDouble(userInput.substring
-                                        (indexPos + 1));
+                            if ((userInput.charAt(indexPos + 1)) == '-') {
+                                letterGrade += "-";
+                                indexPos += 1;
                             }
 
+                            if (userInput.indexOf("-", indexPos + 1) != -1) {
+                                courseCreds = Double.parseDouble(userInput.substring
+                                        (indexPos + 1, userInput.indexOf("-", indexPos + 1)));
+                                indexPos = userInput.indexOf("-", indexPos + 1);
+                            } else {
+                                courseCreds = Double.parseDouble(userInput.substring(indexPos + 1));
+                            }
 
+                            //calc gradePts
+                            gradePts = switch (letterGrade) { //calc gradePts
+                                case "A" -> 4.0;
+                                case "A-" -> 3.7;
+                                case "B+" -> 3.3;
+                                case "B" -> 3.0;
+                                case "B-" -> 2.7;
+                                case "C+" -> 2.3;
+                                case "C" -> 2.0;
+                                case "C-" -> 1.7;
+                                case "D+" -> 1.3;
+                                case "D" -> 1.0;
+                                case "D-" -> 0.7;
+                                case "F" -> 0;
+                                default -> gradePts;
+                            };
 
+                            //make gpa calcs at this point and concat to gpaProg
+                            currentGPA = ((currentGPA * currentCreds) + //calc current TQP and add...
+                                    (gradePts * courseCreds)) / //calc new course TQP
+                                    (currentCreds + courseCreds); //calc TC
+                            currentCreds = (currentCreds + courseCreds);
+
+                            gpaProg += "-" + String.format("%.2f", currentGPA);
                         }
 
+                        //final print
+                        System.out.printf(SEMESTER_OUTCOME + " %.2f%s\n", currentGPA, gpaProg);
                         break;
                     //Exit
                     case "3":
@@ -160,11 +192,11 @@ public class GpaTracker {
                             falseExit = false;
                             userInput = scan.nextLine();
 
-                            if (userInput.equals("yes") || userInput.equals("y")) {
+                            if (userInput.equalsIgnoreCase("yes") || userInput.equalsIgnoreCase("y")) {
                                 System.out.println(THANK_YOU);
                                 exitFlag = true;
                                 break;
-                            } else if (userInput.equals("no") || userInput.equals("n")) {
+                            } else if (userInput.equalsIgnoreCase("no") || userInput.equalsIgnoreCase("n")) {
                                 falseExit = true;
                             } else {
                                 System.out.println(INVALID_INPUT);
