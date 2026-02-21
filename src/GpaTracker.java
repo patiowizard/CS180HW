@@ -1,6 +1,19 @@
 import java.util.Scanner;
 
-//Javadoc Here
+/**
+ * GpaTracker Program - PJ01
+ *
+ * This program initializes by providing an interactive menu that
+ * allows the user to choose which function of the tracker to use, or to exit.
+ * The program can calculate how your current GPA will be affected by
+ * a single class grade, or how it will be affected by a semester's worth
+ * of classes' grades.
+ *
+ * @author Andres Maldonado, Lab Section L18
+ *
+ * @version February 20, 2026
+ *
+ */
 
 public class GpaTracker {
 
