@@ -1,5 +1,22 @@
 import java.util.Scanner;
 
+/**
+ * MonsterMaze Program - HW06
+ *
+ * This program is a game called MonsterMaze, in which the player chooses
+ * an input between WASD that controls their player on a grid, with the
+ * goal of ending the program by reaching the goal. Another way to end the
+ * program is by colliding with a monster on the board. The grid size,
+ * player, and grid starting locations are all customizable. The number of
+ * monsters and each of their respective starting locations are also
+ * customizable.
+ *
+ * @author Andres Maldonado, Lab Section L18
+ *
+ * @version February 25, 2026
+ *
+ */
+
 public class MonsterMaze {
 
     // Constants for Prompts
@@ -18,11 +35,16 @@ public class MonsterMaze {
         System.out.println(arg);
     }
 
-    static public int[] coordsParser(String input) {
+    static public int coordsParser(String input, int yz) {
         String[] coordsArray = input.split(",");
-        for (String coord, coordsArray) {
-            int[] coordsArrayInts = Integer.parseInt(coord);
+        int[] coordsArrayInts = new int[2];
+
+        for (int i = 0; i < coordsArray.length; i++) {
+            coordsArrayInts[i] = Integer.parseInt(coordsArray[i]);
         }
+        int coord = coordsArrayInts[yz];
+
+        return coord;
     }
 
     static void main(String[] args) {
@@ -32,78 +54,88 @@ public class MonsterMaze {
         print(WELCOME_MESSAGE);
 
         print(INPUT_SIZE);
-        Gameboard board = new Gameboard(10, 10);
+        input = scan.nextLine();
+        Gameboard board = new Gameboard(coordsParser(input, 0), coordsParser(input, 1));
 
+        print(INPUT_START);
+        input = scan.nextLine();
+        Entity player = new Entity(coordsParser(input, 0), coordsParser(input, 1));
 
+        print(INPUT_GOAL);
+        input = scan.nextLine();
+        Entity goal = new Entity(coordsParser(input, 0), coordsParser(input, 1));
 
+        print(INPUT_MONSTERS);
+        int numMonsters = scan.nextInt();
+        scan.nextLine();
+        Entity[] monsters = new Entity[numMonsters];
 
-        Entity[] monsters = new Entity[2];
-        monsters[0] = new Entity(1, 3);
-        monsters[1] = new Entity(1, 5);
+        for (int i = 0; i < numMonsters; i++) {
+            input = scan.nextLine();
+            monsters[i] = new Entity(coordsParser(input, 0), coordsParser(input, 1));
+        }
 
-        Entity player = new Entity(5, 3);
-        Entity goal = new Entity(3, 2);
-
-        boolean winState = false;
-        while (!winState) {
+        boolean gameDone = false;
+        while (!gameDone) {
+            print(MOVE);
             input = (scan.nextLine()).toUpperCase();
+
             switch (input) {
                 case "W":
                     player.moveUp(board);
                     break;
-                case "S" :
+                case "S":
                     player.moveDown(board);
                     break;
-                case "D" :
+                case "D":
                     player.moveRight(board);
                     break;
-                case "A" :
+                case "A":
                     player.moveLeft(board);
                     break;
             }
 
             for (Entity monster : monsters) {
-                monster.monsterMoveDown(board);
+                monster.monsterMoveUp(board);
                 if (monster.outOfBounds(board)) {
                     monster.setYPos(monster.getYPos() + board.getYSize());
                 }
             }
 
+            //tester code
+            //System.out.printf("Player Loc is: [%d, %d]\n", player.getYPos(), player.getXPos());
+            //System.out.printf("Goal Loc is: [%d, %d]\n\n", goal.getYPos(), goal.getXPos());
+            //for (int i = 0; i < monsters.length; i++) {
+            //    System.out.printf("Monster %d Loc is: [%d, %d]\n",
+            //            i + 1, monsters[i].getXPos(), monsters[i].getYPos());
 
-            System.out.printf("Player Loc is: [%d, %d]\n", player.getXPos(), player.getYPos());
-            System.out.printf("Goal Loc is: [%d, %d]\n\n", goal.getXPos(), goal.getYPos());
-
-            for (int i = 0; i < monsters.length; i++) {
-                System.out.printf("Monster %d Loc is: [%d, %d]\n",
-                        i + 1, monsters[i].getXPos(), monsters[i].getYPos());
+            //check monster collision
+            for (Entity monster : monsters) {
+                if ((player.getXPos() == monster.getXPos()) &&
+                        player.getYPos() == monster.getYPos()) {
+                    print(GAME_OVER);
+                    gameDone = true;
+                }
             }
 
+            //check goal collision
             if ((player.getXPos() == goal.getXPos()) &&
                     player.getYPos() == goal.getYPos()) {
-                print("User is winning!");
-            } else {
-                print("User is losing lol!");
-            }
-
-            if (input.equalsIgnoreCase("stop")) {
-                winState = true;
+                print(REACH_GOAL);
+                gameDone = true;
             }
         }
 
-
-
-
-
-
-
+        print(THANKS);
     }
+
 
     static class Gameboard {
         private int xSize;
         private int ySize;
 
         // construct gameboard
-        public Gameboard(int xSize, int ySize) {
+        public Gameboard(int ySize, int xSize) {
             this.xSize = xSize;
             this.ySize = ySize;
         }
@@ -118,13 +150,13 @@ public class MonsterMaze {
         private int yPos;
 
         // construct entity
-        public Entity(int xPos, int yPos) {
+        public Entity(int yPos, int xPos) {
             this.xPos = xPos;
             this.yPos = yPos;
         }
 
         // initialize position function
-        public void setPos(int xPos, int yPos) {
+        public void setPos(int yPos, int xPos) {
             this.xPos = xPos;
             this.yPos = yPos;
         }
@@ -141,14 +173,14 @@ public class MonsterMaze {
         public int getYPos() { return yPos; }
 
         // movement functions
-        public void moveUp(Gameboard board) {
+        public void moveDown(Gameboard board) {
             this.yPos++;
             if (outOfBounds(board)) {
                 this.yPos--;
                 print(INVALID_MOVE);
             }
         }
-        public void moveDown(Gameboard board) {
+        public void moveUp(Gameboard board) {
             this.yPos--;
             if (outOfBounds(board)) {
                 this.yPos++;
@@ -171,7 +203,7 @@ public class MonsterMaze {
         }
 
         //monster movement
-        public void monsterMoveDown(Gameboard board) {
+        public void monsterMoveUp(Gameboard board) {
             this.yPos--;
             if (outOfBounds(board)) {
                 this.yPos += board.getYSize() + 1;
