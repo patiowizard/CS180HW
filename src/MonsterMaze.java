@@ -47,7 +47,7 @@ public class MonsterMaze {
         return coord;
     }
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         //initialization
         Scanner scan = new Scanner(System.in);
         String input;
@@ -95,19 +95,20 @@ public class MonsterMaze {
                     break;
             }
 
+            // check monster collision immediately after player moves
             for (Entity monster : monsters) {
-                monster.monsterMoveUp(board);
-                if (monster.outOfBounds(board)) {
-                    monster.setYPos(monster.getYPos() + board.getYSize());
+                if (player.getXPos() == monster.getXPos() &&
+                        player.getYPos() == monster.getYPos()) {
+                    print(GAME_OVER);
+                    gameDone = true;
+                    break;
                 }
             }
+            if (gameDone) break;
 
-            //tester code
-            //System.out.printf("Player Loc is: [%d, %d]\n", player.getYPos(), player.getXPos());
-            //System.out.printf("Goal Loc is: [%d, %d]\n\n", goal.getYPos(), goal.getXPos());
-            //for (int i = 0; i < monsters.length; i++) {
-            //    System.out.printf("Monster %d Loc is: [%d, %d]\n",
-            //            i + 1, monsters[i].getXPos(), monsters[i].getYPos());
+            for (Entity monster : monsters) {
+                monster.monsterMoveUp(board);
+            }
 
             //check monster collision
             for (Entity monster : monsters) {
@@ -233,8 +234,8 @@ public class MonsterMaze {
         //monster movement
         public void monsterMoveUp(Gameboard board) {
             this.yPos--;
-            if (outOfBounds(board)) {
-                this.yPos += board.getYSize() + 1;
+            if (this.yPos < 0) {
+                this.yPos = board.getYSize() - 1;
             }
         }
 
@@ -244,9 +245,5 @@ public class MonsterMaze {
                     (this.xPos < 0) || (this.xPos > board.getXSize());
         }
     }
-
-
-
-
 }
 
