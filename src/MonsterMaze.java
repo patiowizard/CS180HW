@@ -129,6 +129,18 @@ public class MonsterMaze {
         print(THANKS);
     }
 
+    /**
+     * MonsterMaze Program - HW06
+     *
+     * This class is what I use to initialize the gameboard and have it be
+     * accessible by other methods in the greater class, which is why I had
+     * it static.
+     *
+     * @author Andres Maldonado, Lab Section L18
+     *
+     * @version February 25, 2026
+     *
+     */
 
     static class Gameboard {
         private int xSize;
@@ -141,9 +153,25 @@ public class MonsterMaze {
         }
 
         // get gameboard stuffs
-        public int getXSize() {return xSize;}
-        public int getYSize() {return ySize;}
+        public int getXSize() { return xSize; }
+        public int getYSize() { return ySize; }
     }
+
+    /**
+     * MonsterMaze Program - HW06
+     *
+     * This class is what I use to implement different entities in
+     * the greater, MonsterMaze Program. The player, goal, and any
+     * monsters are each objects that are constructed in the main
+     * method using the constructors within this class. This is also
+     * where I implement the movement system for these objects, and
+     * include their positions within each object.
+     *
+     * @author Andres Maldonado, Lab Section L18
+     *
+     * @version February 25, 2026
+     *
+     */
 
     static class Entity {
         private int xPos;
@@ -156,16 +184,16 @@ public class MonsterMaze {
         }
 
         // initialize position function
-        public void setPos(int yPos, int xPos) {
-            this.xPos = xPos;
-            this.yPos = yPos;
+        public void setPos(int y, int x) {
+            this.xPos = x;
+            this.yPos = y;
         }
 
-        public void setYPos(int yPos) {
-            this.yPos = yPos;
+        public void setYPos(int y) {
+            this.yPos = y;
         }
-        public void setXPos(int xPos) {
-            this.xPos = xPos;
+        public void setXPos(int x) {
+            this.xPos = x;
         }
 
         // get positions
